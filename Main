@@ -1,0 +1,2334 @@
+#Region  Project Attributes 
+	#ApplicationLabel: SlotMachine
+	#VersionCode: 9
+	#VersionName: SM1v1.02
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: portrait
+	#CanInstallToExternalStorage: False
+	
+	#If AdsGoogle 
+		#AdditionalRes: C:\Program Files (x86)\Android\android-sdk\extras\google\google_play_services\libproject\google-play-services_lib\res, com.google.android.gms
+	#End If
+	
+	
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: true
+	#IncludeTitle: false
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+	
+	Dim bonusCzasowy = 200 As Int
+	
+	
+	
+	Dim manager As BillingManager3
+    Private inappkey As String = "" 'google app key
+	Dim kupioneMap As Map
+	Dim kupione As Purchase
+	
+	Dim const ileLiniWygrywa As Int = 72
+	
+	Dim bmp(12) As Bitmap
+	Dim bmpLinie(ileLiniWygrywa) As Bitmap
+	Dim bmpKolo As Bitmap
+	Dim bmpPrzyciskBlue As Bitmap
+	Dim bmpPrzyciskGreen As Bitmap
+	Dim bmpPrzyciskLightGreen As Bitmap
+	Dim bmpPrzyciskDarkGreen As Bitmap
+	Dim bmpPrzyciskRed As Bitmap
+	Dim bmpSoundON ,bmpSoundOFF As Bitmap
+	
+	Dim timer1 As Timer
+	Dim timer2 As Timer
+	Dim timer3 As Timer
+	Dim timer4 As Timer
+	Dim timer5 As Timer
+	Dim timer6 As Timer
+	
+	
+	Dim timer5_czas As Int
+	Dim listaWygranych As List
+	Dim wygrana3_linia(32) As Int
+	Dim wygrana2_linia(32) As Int
+	Dim wygrana1_linia(32) As Int
+	
+	Dim poziomGry As Int
+	Dim stanGry As Map
+	Dim stanGry2 As Map
+	
+	Dim aa1,aa2,aa3 As Int
+	Dim w1,w2,w3 As koloWynik
+	Dim liniaA1,liniaA2,liniaA3 As Int
+	Dim liniaB1,liniaB2,liniaB3 As Int
+	Dim dollar As Int
+	
+	Dim boo_sprawdz As Boolean
+	Dim booSpin1 As Boolean
+	Dim booSpin2 As Boolean
+	Dim booSpin3 As Boolean
+	Dim stawka As Int
+	Dim stawkaPoziom As Int
+	Dim stawkaMax As Int
+	Dim zatrzymaj As Int
+	Dim autostart As Boolean
+	Dim przegranychDolcow As Long
+	Dim wygranychDolcow As Long
+	Dim klatka(5) As Int
+	
+	Dim iloscFigurNaKole As Int
+	iloscFigurNaKole=32
+	Dim znakWaluty As String
+	Dim mp As MediaPlayer
+	Dim soundON As Boolean
+	
+	Dim ileLiniZagrac As Int
+	
+	Dim kolo_stop As Boolean
+	
+	Dim bonus_2h As Long
+	Dim boo_czasowyBonus As Boolean
+	Dim czas_do_nastepnego_bonusu As Long
+	
+	Dim ph As PhoneWakeState
+	
+	
+	Dim const ananas As Int = 9
+	Dim const sliwka As Int = 8
+	Dim const siedem As Int = 7
+	Dim const banan As Int = 6
+	Dim const cytryna As Int = 5
+	Dim const arbuz As Int = 4
+	Dim const gruszka As Int = 3
+	Dim const jablko As Int = 2
+	Dim const wisnia As Int = 1
+	Dim const winogron As Int = 0
+	#if traker
+		Dim	tracker As AnalyticsTracker
+	#end if
+	
+	Type koloWynik(linia1 As Int,linia2 As Int, linia3 As Int,linia4 As Int, linia5 As Int)
+	Dim figury As koloWynik
+	Type payLine(kolo1poz As Int, kolo2poz As Int, kolo3poz As Int)
+	Dim liniaPlaci As payLine
+	Dim listaPlacacychLini As List
+End Sub
+
+Sub Globals
+	'These global variables will be redeclared each time the activity is created.
+	'These variables can only be accessed from this module.
+	Dim cav1 As Canvas
+	Dim rect(16) As Rect
+	
+	#if AdsGoogle
+		Private adview1 As AdView
+	#End if
+
+	Private btnStart As Button
+	Dim gv1 As GameView
+	Private btnIleLiniZagrac As Button
+	Private btnKup As Button
+	Private Button1 As Button
+	Private Button2 As Button
+	Private Button3 As Button
+	Private btnStawka As Button
+	Private ivKolo1 As ImageView
+	Private ivKolo2 As ImageView
+	Private ivKolo3 As ImageView
+	Private ivLinie(ileLiniWygrywa) As ImageView
+	
+	Private btnAutoSpin As Button
+	Private lbDollars As Label
+	Private lbPrzegranychDolcow As Label
+	Private lbStawka As Label
+	Private lbWygrana As Label
+	Private lbWygranychDolcow As Label
+	Private pnlTlo As Panel
+	Private pnlSzloSpinera As Panel
+	Private pnlSpiner As Panel
+	Private pnlLiczniki As Panel
+	Private pnlPrzyciski As Panel
+	Private pnlAds As Panel
+	
+	
+	Private ivP1 As ImageView
+	
+	Private btnSoundOnOff As Button
+
+'	Private btnPayTable As Button
+	
+	Private ListView1 As ListView
+	Private lbPoziomGry As Label
+	
+	Dim pozionStartAt As Long
+	Dim nextPoziomAt As Long
+	Dim procentyPoziomu As Int
+	Dim poziomMaPunktow As Long
+	Dim poziom1 As Long
+	Dim poziomStart As Long
+	#if test
+		Private lvWygranych As ListView
+	#end if	
+	Private pnlWygrane As Panel
+	Private lbCzasowyBonus As Label
+	Private btnMaxBet As Button
+	Private ivObraz1 As ImageView
+	Private ivObraz2 As ImageView
+	Private ivObraz3 As ImageView
+	Dim font As Typeface
+	
+	Private pnlTable As Panel
+	Private pnlPayTable As Panel
+	
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+	'Do not forget to load the layout file created with the visual designer. For example:
+'	Activity.LoadLayout("slot1")
+	Activity.LoadLayout("lay44")
+	
+	For i=0 To ileLiniWygrywa -1
+		ivLinie(i).Initialize("ivLinie"&i)
+	Next	
+
+	
+	
+	pnlTlo.Initialize("pnlTlo")
+	pnlSzloSpinera.Initialize("pnlSzloSpinera")
+	pnlSpiner.Initialize("pnlSpiner")
+	pnlLiczniki.Initialize("pnlLiczniki")
+	pnlPrzyciski.Initialize("pnlPrzyciski")
+	pnlAds.Initialize("pnlAds")
+	btnAutoSpin.Initialize("btnAutoSpin")
+	btnMaxBet.Initialize("btnMaxBet")
+'	btnPayTable.Initialize("btnPayTable")
+	pnlPayTable.Initialize("pnlPayTable")
+	btnSoundOnOff.Initialize("btnSoundOnOff")
+	btnStart.Initialize("btnStart")
+	btnIleLiniZagrac.Initialize("btnIleLiniZagrac")
+	btnStawka.Initialize("btnStawka")
+	Button1.Initialize("Button1")
+	Button2.Initialize("Button2")
+	Button3.Initialize("Button3")
+	btnKup.Initialize("btnKup")
+	ivKolo1.Initialize("ivKolo1")
+	ivKolo2.Initialize("ivKolo2")
+	ivKolo3.Initialize("ivKolo3")
+	lbDollars.Initialize("lbDollars")
+	lbPrzegranychDolcow.Initialize("lbPrzegranychDolcow")
+	lbStawka.Initialize("lbStawka")
+	lbWygrana.Initialize("lbWygrana")
+	lbWygranychDolcow.Initialize("lbWygranychDolcow")
+	lbPoziomGry.Initialize("lbPoziomGry")
+	ivP1.Initialize("ivP1")
+'	ListView1.Initialize("ListView1")
+'	lvWygranych.Initialize("lvWygranych")
+'	pnlWygrane.Initialize("pnlWygrane")
+	lbCzasowyBonus.Initialize("lbCzasowyBonus")
+	ivObraz1.Initialize("ivObraz1")
+	ivObraz2.Initialize("ivObraz2")
+	ivObraz3.Initialize("ivObraz3")
+	listaPlacacychLini.Initialize
+	
+	
+	bmpPrzyciskBlue.Initialize(File.DirAssets,"btnsq.png")
+	bmpPrzyciskRed.Initialize(File.DirAssets,"btnsqRed.png")
+	bmpPrzyciskGreen.Initialize(File.DirAssets,"btnsqGreen.png")
+	bmpPrzyciskLightGreen.Initialize(File.DirAssets,"btnsqLightGreen.png")
+	bmpPrzyciskDarkGreen.Initialize(File.DirAssets,"btnsqDarkGreen.png")
+	bmpSoundON.Initialize(File.DirAssets,"soundON.png")
+	bmpSoundOFF.Initialize(File.DirAssets,"soundOFF.png")
+	
+	Dim szerokoszBTN,przerwaBTN As Int
+	Dim sz2 = 60%x As Int	
+	Dim slupek As Double
+	Dim okno As Double
+	slupek=2.5%x
+	okno= (sz2 * 28.33) /100
+	Log("okno szerokosc = "& okno)
+	szerokoszBTN=100%x/5
+	przerwaBTN= szerokoszBTN/5
+	
+	Activity.AddView(pnlTlo,0,0,100%x,100%y)
+	Activity.AddView(pnlSzloSpinera,0,40%y,100%x,25%y)
+	Activity.AddView(pnlPayTable,0,55dip,100%x,20%y)
+	Activity.AddView(pnlPrzyciski,0,pnlSzloSpinera.Top +pnlSzloSpinera.Height,100%x,100%y - (pnlSzloSpinera.Height+pnlSzloSpinera.Top))
+	
+	
+	
+	If FirstTime Then
+		manager.Initialize("manager", inappkey)
+		manager.DebugLogging = True	
+		kupioneMap.Initialize
+	End If
+
+'	For i=0 To ileLiniWygrywa -1
+	For i=0 To 10
+		bmpLinie(i).Initialize(File.DirAssets,"ln"& (i+1) & ".png")
+	Next
+	For i=11 To ileLiniWygrywa-1
+		bmpLinie(i).Initialize(File.DirAssets,"ln1.png")
+	Next
+	
+	pnlTlo.AddView(pnlAds,0,0,100%x,50dip)
+	pnlTlo.AddView(pnlLiczniki,3%x,pnlSzloSpinera.Top - 52dip,94%x,50dip)
+	
+	
+	pnlTlo.AddView(lbPoziomGry,100%x-pnlTlo.Width/3-3%x,pnlAds.Height,pnlTlo.Width/3,40dip)
+	
+	
+
+	ileLiniZagrac=1
+	
+
+	
+	pnlPrzyciski.AddView(lbCzasowyBonus,100%x- (przerwaBTN+1.5*szerokoszBTN),pnlPrzyciski.Height - (szerokoszBTN+przerwaBTN),1.5*szerokoszBTN,szerokoszBTN)
+	pnlPrzyciski.AddView(btnKup,(2* przerwaBTN)+szerokoszBTN ,pnlPrzyciski.Height - (szerokoszBTN+przerwaBTN),szerokoszBTN*1.5,szerokoszBTN)
+	pnlPrzyciski.AddView(btnSoundOnOff,przerwaBTN, pnlPrzyciski.Height - (szerokoszBTN+przerwaBTN),szerokoszBTN,szerokoszBTN)
+
+	
+	
+	pnlSzloSpinera.AddView(pnlSpiner,50%x-(sz2/2),0,sz2,pnlSzloSpinera.Height)
+	pnlSpiner.Color=Colors.Green
+	pnlSzloSpinera.AddView(ivObraz1,0,0,100%x,pnlSzloSpinera.Height)
+	pnlSzloSpinera.AddView(ivObraz3,0,0,100%x,pnlSzloSpinera.Height)
+	pnlSzloSpinera.AddView(ivObraz2,50%x-(sz2/2),0,sz2,pnlSzloSpinera.Height)
+	
+'	For i=0 To ileLiniWygrywa -1
+	For i=0 To 10
+		pnlSzloSpinera.AddView(ivLinie(i),50%x-(sz2/2),0,sz2,pnlSzloSpinera.Height)
+	Next	
+	pnlSzloSpinera.AddView(ivP1,50%x-(sz2/2),0,ivObraz2.Width,ivObraz2.Height)
+	
+	
+		
+	pnlSpiner.AddView(ivKolo1,slupek,slupek,okno,pnlSpiner.Height-(2*slupek))
+	pnlSpiner.AddView(ivKolo2,ivKolo1.Width+(2*slupek),ivKolo1.Top,okno,pnlSpiner.Height-(2*slupek))
+	pnlSpiner.AddView(ivKolo3,(2* ivKolo1.Width)+(3*slupek),ivKolo1.Top,okno,pnlSpiner.Height-(2*slupek))
+	
+	pnlLiczniki.AddView(lbWygrana,0,0,pnlLiczniki.Width/3,pnlLiczniki.Height)
+	pnlLiczniki.AddView(lbStawka,lbWygrana.Width,0,pnlLiczniki.Width/5,pnlLiczniki.Height)
+	pnlLiczniki.AddView(lbDollars,lbWygrana.Width+lbStawka.Width,0,pnlLiczniki.Width/3,pnlLiczniki.Height)
+	lbWygrana.Gravity = Bit.Or(Gravity.RIGHT,Gravity.CENTER_VERTICAL)
+	lbStawka.Gravity = Bit.Or(Gravity.RIGHT,Gravity.CENTER_VERTICAL)
+	lbDollars.Gravity = Bit.Or(Gravity.RIGHT,Gravity.CENTER_VERTICAL)
+	lbCzasowyBonus.Gravity = Bit.Or(Gravity.CENTER_HORIZONTAL,Gravity.CENTER_VERTICAL)
+	lbPoziomGry.Gravity = Bit.Or(Gravity.RIGHT,Gravity.CENTER_VERTICAL)
+	lbWygrana.TextColor=Colors.Red
+	lbStawka.TextColor=Colors.Red
+	lbDollars.TextColor=Colors.Red
+	
+	pnlPrzyciski.AddView(Button1,ivKolo1.Left+pnlSpiner.Left,0,ivKolo1.Width,30dip)
+	pnlPrzyciski.AddView(Button2,ivKolo2.Left+pnlSpiner.Left,0,ivKolo2.Width,30dip)
+	pnlPrzyciski.AddView(Button3,ivKolo3.Left+pnlSpiner.Left,0,ivKolo3.Width,30dip)
+	
+	pnlPrzyciski.AddView(btnIleLiniZagrac,przerwaBTN,35dip,szerokoszBTN,szerokoszBTN)
+'	pnlPrzyciski.AddView(btnStawka,przerwaBTN,35dip,szerokoszBTN,szerokoszBTN)
+	pnlPrzyciski.AddView(btnStawka,(2*przerwaBTN) + szerokoszBTN,35dip,szerokoszBTN,szerokoszBTN)
+'	pnlPrzyciski.AddView(btnMaxBet,(2*przerwaBTN) + szerokoszBTN,35dip,szerokoszBTN,szerokoszBTN)
+	pnlPrzyciski.AddView(btnAutoSpin,(3*przerwaBTN)+(2*szerokoszBTN),35dip,szerokoszBTN,szerokoszBTN)
+	pnlPrzyciski.AddView(btnStart,(4*przerwaBTN)+(3*szerokoszBTN),35dip,szerokoszBTN,szerokoszBTN)
+	
+'	lbWygrana.Typeface = font.LoadFromAssets("Pixel.ttf")
+'	lbStawka.Typeface = font.LoadFromAssets("Pixel.ttf")
+'	lbDollars.Typeface = font.LoadFromAssets("Pixel.ttf")
+'	lbCzasowyBonus.Typeface = font.LoadFromAssets("Pixel.ttf")
+
+	lbWygrana.TextSize=20
+	lbStawka.TextSize=20
+	lbDollars.TextSize=20
+	lbCzasowyBonus.TextSize=14
+	
+	lbPoziomGry.TextSize=14
+	lbPoziomGry.TextColor=Colors.Green
+	
+
+	pnlTlo.SendToBack
+	ivKolo1.BringToFront
+	ivKolo2.BringToFront
+	ivKolo3.BringToFront
+'	ivP1.SendToBack
+'	ivKolo1.SendToBack
+'	ivKolo2.SendToBack
+'	ivKolo3.SendToBack
+	
+	ivP1.Gravity = Gravity.FILL
+	ivObraz1.Gravity = Gravity.FILL
+	ivObraz2.Gravity = Gravity.FILL
+	ivObraz3.Gravity = Gravity.FILL
+	
+	ivObraz3.Gravity = Gravity.FILL
+	
+	
+	For i =0 To 10
+'	For i =0 To ileLiniWygrywa -1
+		ivLinie(i).Gravity=Gravity.fill
+		ivLinie(i).SetBackgroundImage(bmpLinie(i))
+		ivLinie(i).BringToFront
+		ivLinie(i).Visible=False
+	Next
+	pnlTlo.SetBackgroundImage(LoadBitmap(File.DirAssets,"no3a.png"))
+	ivP1.SetBackgroundImage(LoadBitmap(File.DirAssets,"kolo2a.png"))
+	pnlLiczniki.SetBackgroundImage(LoadBitmap(File.DirAssets,"hh.png"))
+	ivObraz1.SetBackgroundImage(LoadBitmap(File.DirAssets,"no1b.png"))
+	ivObraz2.SetBackgroundImage(LoadBitmap(File.DirAssets,"no2.png"))
+	
+	pnlPayTable.SetBackgroundImage(LoadBitmap(File.DirAssets,"payTable.png"))
+'	ivObraz3.SetBackgroundImage(LoadBitmapSample(File.DirAssets,"ob5.png",ivObraz3.Width,ivObraz3.Height))
+'	pnlSpiner.SetBackgroundImage(LoadBitmap(File.DirAssets,"ob6.png"))
+	
+	
+	
+	btnStart.SetBackgroundImage(bmpPrzyciskBlue)
+	btnIleLiniZagrac.SetBackgroundImage(bmpPrzyciskBlue)
+	btnMaxBet.SetBackgroundImage(bmpPrzyciskBlue)
+	btnStawka.SetBackgroundImage(bmpPrzyciskBlue)
+	btnKup.SetBackgroundImage(bmpPrzyciskBlue)
+
+	btnAutoSpin.SetBackgroundImage(bmpPrzyciskRed)
+	
+
+	
+	listaWygranych.Initialize
+	#if test
+		lvWygranych.Color = Colors.Blue
+	#end if	
+	tlumacz.wybor_jezyka_programu
+	
+	
+	
+	pnlWygrane.Visible = False
+	pnlWygrane.BringToFront
+	gv1.Initialize("gv1")
+
+'klatka 1
+	rect(0).Initialize(0,0, ivKolo1.Width,0.2 * ivKolo1.Height)
+	rect(1).Initialize(0,0.3 * ivKolo1.Height, ivKolo1.Width ,0.7 * ivKolo1.Height)
+	rect(2).Initialize(0,0.8 * ivKolo1.Height, ivKolo1.Width ,1 * ivKolo1.Height)
+
+'klatka 2
+	rect(3).Initialize(0,0.15 * ivKolo1.Height, ivKolo1.Width ,0.4 * ivKolo1.Height)
+	rect(4).Initialize(0,0.6 * ivKolo1.Height, ivKolo1.Width ,0.9 * ivKolo1.Height)
+
+
+
+
+	#If AdsGoogle
+		pnlAds.Visible=True
+		adview1.Initialize("ads","ca-app-pub-2004104349299046/2599582816")  'zmieno 07 kwietnia 2016
+
+	#End If
+
+
+
+'	czas_do_nastepnego_bonusu = DateTime.TicksPerMinute 
+	czas_do_nastepnego_bonusu = DateTime.TicksPerHour 
+
+	stanGry.Initialize
+	stanGry2.Initialize
+	
+	For i = 0 To 9
+		bmp(i).InitializeSample(File.DirAssets ,i &".png",100dip,100dip)
+	Next
+	bmpKolo.Initialize(File.DirAssets,"kolo1.png")
+
+
+
+	
+	Dim szybkoscKrecenia As Int
+	szybkoscKrecenia = 30
+	
+	timer1.Initialize("timer1",szybkoscKrecenia)
+	timer2.Initialize("timer2",szybkoscKrecenia)
+	timer3.Initialize("timer3",szybkoscKrecenia)
+	timer6.Initialize("timer6",1000)
+	ocenMojaAplikacje.timerOcenApp.Initialize("timerOcenApp",1500)
+	
+	
+	timer1.Enabled = True
+	timer2.Enabled = True
+	timer3.Enabled = True
+	timer6.Enabled = True
+	
+	
+	If FirstTime Then
+
+	#if traker
+		tracker.Initialize ' zmien numer w pliku xml
+	#end if
+	
+		
+	End If
+	#If AdsGoogle
+		pnlAds.AddView(adview1,50%x - (350dip /2),0,350dip,50dip)
+	#End If
+	#If traker
+		tracker.SendScreenView("SM1 poziom "& poziomGry) 
+	#End if
+	
+	mp.Initialize2("mp1")
+
+	
+	cav1.Initialize(ivKolo1)
+
+	
+		 oblicz_mozliwisc_wygranej
+	
+	stawka=1
+	lbWygrana.Text = znakWaluty & 0
+	
+	lbDollars.Text = znakWaluty & dollar
+	
+
+	
+	#If AdsGoogle
+		pnlAds.BringToFront
+		adview1.LoadAd
+	#End If		 
+
+End Sub
+
+Sub Activity_Resume
+	
+	
+	listaPlacacychLini = uzupelnijListePlac
+	wczytajStanGry
+	
+	btnStart.Text = "Start"
+'	btnPayTable.Text = "Pay" & CRLF & "Table"
+	btnAutoSpin.Text = "Auto"
+	
+	btnKup.Text= znakWaluty & "100000"
+	
+		If kolo_stop = True Then
+			Button1.SetBackgroundImage(bmpPrzyciskGreen)
+			Button2.SetBackgroundImage(bmpPrzyciskGreen)
+			Button3.SetBackgroundImage(bmpPrzyciskGreen)
+		Else	
+			Button1.SetBackgroundImage(bmpPrzyciskDarkGreen)
+			Button2.SetBackgroundImage(bmpPrzyciskDarkGreen)
+			Button3.SetBackgroundImage(bmpPrzyciskDarkGreen)
+		End If	
+	
+	
+	For i=0 To ileLiniZagrac-1
+		ivLinie(i).Visible=True
+	Next
+	
+	
+	
+	#If AdsGoogle
+ 		adview1.Resume
+	#End If	
+'	ocenMojaAplikacje.ocenMojaApp to samo tylko z timerem jest w Sub wczytajStanGry
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+	
+	#If AdsGoogle
+		adview1.Pause
+	#End If
+	
+	autoStartOFF
+	zapiszStanGry
+
+End Sub
+
+Sub zapiszStanGry
+	
+
+
+		stanGry.Put("pozionStartAt",pozionStartAt)
+		stanGry.Put("nextPoziomAt",nextPoziomAt)
+		stanGry.Put("procentyPoziomu",procentyPoziomu)
+		stanGry.Put("poziomMaPunktow",poziomMaPunktow)
+	 	stanGry.Put("poziom1",poziom1)
+		stanGry.Put("poziomStart",poziomStart)
+
+		stanGry.Put("dollar",dollar)
+		stanGry2.Put("dollar",dollar)
+		stanGry.Put("kolo1stan",aa1)
+		stanGry.Put("kolo2stan",aa2)
+		stanGry.Put("kolo2stan",aa3)
+		stanGry.Put("kolo1klatka",klatka(0))
+		stanGry.Put("kolo2klatka",klatka(1))
+		stanGry.Put("kolo3klatka",klatka(2))
+
+		stanGry.Put("zatrzymaj",zatrzymaj)
+		stanGry.Put("znakWaluty",znakWaluty)
+		stanGry.Put("stawka",stawka)
+		stanGry.Put("stawkaPoziom",stawkaPoziom)
+		stanGry.Put("ileLiniZagrac",ileLiniZagrac)
+		stanGry.Put("poziomGry",poziomGry)
+		stanGry.Put("przegranychDolcow",przegranychDolcow)
+		stanGry.Put("wygranychDolcow",wygranychDolcow)
+		stanGry.Put("soundON",soundON)
+		stanGry.Put("nieOceniaj",ocenMojaAplikacje.boo_nieOceniaj)
+		stanGry.Put("boo_dalemGwiazke",ocenMojaAplikacje.boo_dalemGwiazke)
+		stanGry.Put("dajGwiazdke",ocenMojaAplikacje.dajGwiazdke)
+		
+		stanGry.Put("bonus_2h",bonus_2h)
+		stanGry.Put("boo_czasowyBonus",boo_czasowyBonus)
+	
+		File.WriteMap(File.DirInternal,"stanGry.wert",stanGry)
+'		File.WriteMap(File.DirRootExternal,"stanGry2.wert",stanGry2)
+		File.WriteList(File.DirInternal,"listaWygranych.txt",listaWygranych)
+		
+End Sub
+
+Sub wczytajStanGry
+	
+	If File.Exists(File.DirInternal,"listaWygranych.txt") Then
+		listaWygranych = File.ReadList(File.DirInternal,"listaWygranych.txt")
+	End If
+	
+	If File.Exists(File.DirInternal,"stanGry.wert") Then
+		stanGry = File.ReadMap(File.DirInternal,"stanGry.wert")
+		
+		If stanGry.ContainsKey("ileLiniZagrac") Then
+			ileLiniZagrac=stanGry.Get("ileLiniZagrac")
+		End If	
+		If stanGry.ContainsKey("pozionStartAt") Then
+			pozionStartAt = stanGry.Get("pozionStartAt")
+		End If
+		If stanGry.ContainsKey("nextPoziomAt") Then	
+			nextPoziomAt = stanGry.Get("nextPoziomAt")
+		End If
+		If stanGry.ContainsKey("procentyPoziomu")Then
+			procentyPoziomu = stanGry.Get("procentyPoziomu")
+		End If
+		If stanGry.ContainsKey("poziomMaPunktow") Then
+			poziomMaPunktow = stanGry.Get("poziomMaPunktow")
+		End If
+		If stanGry.ContainsKey("poziom1") Then
+	 		poziom1 = stanGry.Get("poziom1")
+		End If	
+		If stanGry.ContainsKey("poziomStart") Then
+			poziomStart = stanGry.Get("poziomStart")
+		End If
+		If stanGry.ContainsKey("dollar")Then
+			dollar = stanGry.Get("dollar")
+		End If
+		
+		If stanGry.ContainsKey("kolo1stan") Then
+			aa1 = stanGry.Get("kolo1stan")
+		End If
+		If 	stanGry.ContainsKey("kolo2stan")Then
+			aa2 = stanGry.Get("kolo2stan")
+		End If
+		If stanGry.ContainsKey("kolo2stan")Then
+			aa3 = stanGry.Get("kolo2stan")
+		End If	
+		
+'		aa1 = 0
+'		aa2 = 0
+'		aa3 = 0
+		
+		If stanGry.ContainsKey("kolo1klatka")Then
+			klatka(0) = stanGry.Get("kolo1klatka")
+		End If	
+		If stanGry.ContainsKey("kolo2klatka")Then
+			klatka(1) = stanGry.Get("kolo2klatka")
+		End If	
+		If stanGry.ContainsKey("kolo3klatka")Then
+			klatka(2) = stanGry.Get("kolo3klatka")
+		End If	
+		
+		If stanGry.ContainsKey("zatrzymaj")Then
+			zatrzymaj = stanGry.Get("zatrzymaj")
+		End If
+		If	stanGry.ContainsKey("znakWaluty")Then
+			znakWaluty = stanGry.Get("znakWaluty")
+		End If
+		If stanGry.ContainsKey("stawka")Then
+			stawka = stanGry.Get("stawka")
+		End If	
+		If stanGry.ContainsKey("stawkaPoziom")Then
+			stawkaPoziom = stanGry.Get("stawkaPoziom")
+		End If
+		If stanGry.ContainsKey("poziomGry")Then
+			poziomGry = stanGry.Get("poziomGry")
+		End If
+		If stanGry.ContainsKey("przegranychDolcow")Then
+			przegranychDolcow = stanGry.Get("przegranychDolcow")
+		End If	
+		
+		If stanGry.ContainsKey("wygranychDolcow")Then
+			wygranychDolcow = stanGry.Get("wygranychDolcow")
+		End If
+		If stanGry.ContainsKey("soundON")Then
+			soundON = stanGry.Get("soundON")
+		End If
+		If	stanGry.ContainsKey("nieOceniaj")Then
+			ocenMojaAplikacje.boo_nieOceniaj = stanGry.Get("nieOceniaj")
+		End If
+		If	stanGry.ContainsKey("dajGwiazdke")Then
+			ocenMojaAplikacje.dajGwiazdke = stanGry.Get("dajGwiazdke")
+		End If
+		If	stanGry.ContainsKey("boo_dalemGwiazke")Then
+			ocenMojaAplikacje.boo_dalemGwiazke = stanGry.Get("boo_dalemGwiazke")
+		End If
+		If stanGry.ContainsKey("bonus_2h")Then
+			bonus_2h = stanGry.Get("bonus_2h")
+		End If
+		If 	stanGry.ContainsKey("boo_czasowyBonus")Then
+			boo_czasowyBonus = stanGry.Get("boo_czasowyBonus")
+		End If
+		
+	Else
+		
+		ocenMojaAplikacje.dajGwiazdke = 0
+		ocenMojaAplikacje.boo_nieOceniaj = False
+		ocenMojaAplikacje.boo_dalemGwiazke = False
+		
+		
+	'aby po nowej instalacji stan dolarow sie zgadzał	
+'		If File.Exists(File.DirRootExternal,"stanGry2.wert") Then
+'			stanGry2 = File.ReadMap(File.DirRootExternal,"stanGry2.wert")
+'			If stanGry2.ContainsKey("dollar")Then
+'				dollar = stanGry2.Get("dollar")
+'			End If
+'			Log("stangry2 jest	")
+'		Else
+'			Log("stangry2 brak")
+			dollar = 1000
+'		End If
+		
+		
+		aa1 = 0
+		aa2 = 0
+		aa3 = 0
+		klatka(0) = 0
+		klatka(1) = 0
+		klatka(2) = 0
+
+		zatrzymaj = 0
+		znakWaluty = tlumacz.txt_znakWaluty
+		stawka = 1
+		stawkaPoziom = 3
+		
+		poziomGry = 1
+		przegranychDolcow = 0
+		wygranychDolcow = 0
+		soundON = True
+		
+		
+		
+		bonus_2h = DateTime.Now + czas_do_nastepnego_bonusu 
+		boo_czasowyBonus = True
+		
+	End If
+	
+	
+	
+	
+		
+	If ocenMojaAplikacje.boo_nieOceniaj = False Then
+		ocenMojaAplikacje.timerOcenApp.Enabled = True
+	End If
+	
+	lbWygrana.Text = znakWaluty & 0
+	
+	lbDollars.Text = znakWaluty & dollar
+	lbPrzegranychDolcow.Text = "Total Pay In " & znakWaluty & przegranychDolcow
+	lbWygranychDolcow.Text = "Total Pay OUT " & znakWaluty & wygranychDolcow
+	
+	#if test
+	For i = 0 To listaWygranych.Size - 1
+		lvWygranych.AddSingleLine(listaWygranych.Get(i))
+	Next
+	#end if	
+	
+	
+
+	
+	btnAutoSpin.SetBackgroundImage(bmpPrzyciskRed)
+	
+
+	timer1.Enabled = False
+	timer2.Enabled = False
+	timer3.Enabled = False
+	
+	If soundON = True Then
+		btnSoundOnOff.SetBackgroundImage(bmpSoundON)
+	Else
+		btnSoundOnOff.SetBackgroundImage(bmpSoundOFF)
+	End If
+	
+	Log(soundON)
+	
+	spinner(aa1 ,iloscFigurNaKole,ivKolo1,1,klatka(0))
+	spinner(aa2,iloscFigurNaKole,ivKolo2,2,klatka(1))
+	spinner(aa3 ,iloscFigurNaKole,ivKolo3,3,klatka(2))
+
+	sprawdzPoziomGry
+
+End Sub
+
+
+'
+'Sub ivP1_Click
+'	If timer1.Enabled Then
+'		timer1.Enabled = False
+'	Else
+'		timer1.Enabled=True
+'		
+'	End If
+'End Sub
+'
+'Sub ivP2_Click
+'	If timer2.Enabled Then
+'		timer2.Enabled = False
+'	Else
+'		timer2.Enabled=True
+'		
+'	End If
+'End Sub
+'
+'Sub ivP3_Click
+'	If timer3.Enabled Then
+'		timer3.Enabled = False
+'	Else
+'		timer3.Enabled=True
+'		
+'	End If
+'End Sub
+'
+
+Sub timerOcenApp_Tick
+	Log("timer3_Tick")
+	ocenMojaAplikacje.licznikOcenApp = ocenMojaAplikacje.licznikOcenApp + 1
+	If ocenMojaAplikacje.licznikOcenApp >= 3 Then
+		ocenMojaAplikacje.ocenMojaApp
+		ocenMojaAplikacje.timerOcenApp.Enabled = False
+	End If
+End Sub	
+
+
+
+Sub timer1_Tick
+	Dim g As Int
+		If aa1 < 0 Then
+			aa1 = (iloscFigurNaKole  * 2) -1
+			klatka(0) = 1
+		End If
+			If klatka(0) = 0 Then
+			klatka(0) =  1
+		
+		Else	
+			klatka(0) = 0
+		End If
+			
+			g = aa1
+			If g > 32 Then
+				g = 0
+			End If
+			
+			
+		w1 = spinner(aa1 , iloscFigurNaKole,ivKolo1, 1 ,klatka(0))
+		
+
+				aa1 = aa1 -1
+				
+End Sub
+Sub timer2_Tick
+	Dim g As Int
+		If aa2 < 0 Then
+			aa2 = (iloscFigurNaKole  * 2) -1
+			klatka(1) = 1
+		End If
+			
+		If klatka(1) = 0 Then
+				klatka(1) =  1
+			
+		Else	
+				klatka(1) = 0
+		End If
+		
+		g = aa2
+			If g > 32 Then
+				g = 0
+			End If
+			
+		w2 = spinner(aa2 , iloscFigurNaKole,ivKolo2, 2 ,klatka(1))
+		
+
+				aa2 = aa2 -1
+			
+End Sub
+Sub timer3_Tick
+			Dim g As Int
+			If aa3 < 0 Then
+				aa3 = (iloscFigurNaKole  * 2) -1
+				klatka(2) = 1
+			End If
+			
+			If klatka(2) = 0 Then
+				klatka(2) =  1
+				
+			Else	
+				klatka(2) = 0
+			End If
+			
+			g = aa2
+			If g > 32 Then
+				g = 0
+			End If
+			
+		w3 = spinner(aa3, iloscFigurNaKole,ivKolo3, 3 ,klatka(2))
+		
+		
+
+				aa3 = aa3 -1
+	
+End Sub
+
+
+
+Sub spinner(klx As Int , wielkoscKola As Int, ivKoloNR As ImageView,numerKola As Int, numer_klatki As Int) As koloWynik
+		Dim miejsceNaKole(wielkoscKola + 1) As Int
+	
+Dim kl As Int
+kl = klx / 2
+	Dim kl0, kl1 , kl2	As Int
+			ivKoloNR.SetBackgroundImage(bmpKolo)
+			cav1.Initialize(ivKoloNR)	
+		
+	    ' 0 winogron -333 = 27   
+		' 1 wisnia   -555 = 125   
+		' 2 jabłko   -333 = 27  
+		' 3 gruszka  -333 = 48  
+		' 4 arbuz    -333 = 36   
+		' 5 cytryna  -344 = 48   
+		' 6 banany   -444 = 64   
+		' 7 siedem   -211 = 2     
+		' 8 sliwka	 -444 = 64   
+		' 9 ananas   -222 = 12   
+		
+		' 1 wisnia   -5 = 64  5120
+
+														
+
+
+	If numerKola = 1 Then  
+		'figury na kole numer 1
+		
+		' 0 winogron -3 V
+		' 1 wisnia   -5 V
+		' 2 jabłko   -3  
+		' 3 gruszka  -3 
+		' 4 arbuz    -3   
+		' 5 cytryna  -3 
+		' 6 banany   -4  
+		' 7 siedem   -2  
+		' 8 sliwka	 -4 
+		' 9 ananas   -2
+		
+		miejsceNaKole(0) = 7
+		miejsceNaKole(1) = 6 'banan
+		miejsceNaKole(2) = 4 'arbuz
+		miejsceNaKole(3) = 0
+		miejsceNaKole(4) = 3
+		miejsceNaKole(5) = 6
+		miejsceNaKole(6) = 9
+		miejsceNaKole(7) = 3	
+		miejsceNaKole(8) = 9
+		miejsceNaKole(9) = 6
+		miejsceNaKole(10) = 0
+		miejsceNaKole(11) = 2
+		miejsceNaKole(12) = 1
+		miejsceNaKole(13) = 1
+		miejsceNaKole(14) = 1
+		miejsceNaKole(15) = 6
+		miejsceNaKole(16) = 7 '7
+		miejsceNaKole(17) = 2 ' jablko
+		miejsceNaKole(18) = 1
+		miejsceNaKole(19) = 1
+		miejsceNaKole(20) = 0
+		miejsceNaKole(21) = 5
+		miejsceNaKole(22) = 8		
+		miejsceNaKole(23) = 5
+		miejsceNaKole(24) = 8		
+		miejsceNaKole(25) = 4
+		miejsceNaKole(26) = 3
+		miejsceNaKole(27) = 8
+		miejsceNaKole(28) = 4
+		miejsceNaKole(29) = 8
+		miejsceNaKole(30) = 5		
+		miejsceNaKole(31) = 2 ' jablko
+	
+		
+			
+		
+		
+		
+	else If numerKola = 2 Then
+		'figury na kole numer 2
+		
+		' 0 winogron -3 
+		' 1 wisnia   -5   
+		' 2 jabłko   -3
+		' 3 gruszka  -3
+		' 4 arbuz    -3  
+		' 5 cytryna  -4  
+		' 6 banany   -4 
+		' 7 siedem   -1  V
+		' 8 sliwka	 -4  
+		' 9 ananas   -2 
+		
+		miejsceNaKole(0) = 7
+		miejsceNaKole(1) = 2
+		miejsceNaKole(2) = 6
+		miejsceNaKole(3) = 2
+		miejsceNaKole(4) = 3
+		miejsceNaKole(5) = 0
+		miejsceNaKole(6) = 0
+		miejsceNaKole(7) = 3
+		miejsceNaKole(8) = 5
+		miejsceNaKole(9) = 4
+		miejsceNaKole(10) = 4
+		miejsceNaKole(11) = 3
+		miejsceNaKole(12) = 0
+		miejsceNaKole(13) = 6
+		miejsceNaKole(14) = 1
+		miejsceNaKole(15) = 1
+		miejsceNaKole(16) = 1
+		miejsceNaKole(17) = 1
+		miejsceNaKole(18) = 2
+		miejsceNaKole(19) = 8 
+		miejsceNaKole(20) = 8
+		miejsceNaKole(21) = 1
+		miejsceNaKole(22) = 9
+		miejsceNaKole(23) = 6
+		miejsceNaKole(24) = 6
+		miejsceNaKole(25) = 5
+		miejsceNaKole(26) = 5
+		miejsceNaKole(27) = 5
+		miejsceNaKole(28) = 4
+		miejsceNaKole(29) = 8
+		miejsceNaKole(30) = 9
+		miejsceNaKole(31) = 8
+	
+		
+		
+	
+		
+		
+	else If numerKola = 3 Then
+		'figury na kole numer 3
+		
+		' 0 winogron -3
+		' 1 wisnia   -5 
+		' 2 jabłko   -3
+		' 3 gruszka  -3
+		' 4 arbuz    -3 
+		' 5 cytryna  -4  
+		' 6 banany   -4  
+		' 7 siedem   -1    
+		' 8 sliwka	 -4  
+		' 9 ananas   -2
+		
+		miejsceNaKole(0) = 7
+		miejsceNaKole(1) = 0
+		miejsceNaKole(2) = 5
+		miejsceNaKole(3) = 4
+		miejsceNaKole(4) = 2
+		miejsceNaKole(5) = 1
+		miejsceNaKole(6) = 2
+		miejsceNaKole(7) = 6
+		miejsceNaKole(8) = 4
+		miejsceNaKole(9) = 1
+		miejsceNaKole(10) = 1
+		miejsceNaKole(11) = 1
+		miejsceNaKole(12) = 5
+		miejsceNaKole(13) = 2
+		miejsceNaKole(14) = 6
+		miejsceNaKole(15) = 4
+		miejsceNaKole(16) = 0
+		miejsceNaKole(17) = 0
+		miejsceNaKole(18) = 9
+		miejsceNaKole(19) = 1
+		miejsceNaKole(20) = 8
+		miejsceNaKole(21) = 8
+		miejsceNaKole(22) = 6
+		miejsceNaKole(23) = 5
+		miejsceNaKole(24) = 5
+		miejsceNaKole(25) = 3	
+		miejsceNaKole(26) = 3
+		miejsceNaKole(27) = 8
+		miejsceNaKole(28) = 6
+		miejsceNaKole(29) = 9
+		miejsceNaKole(30) = 3
+		miejsceNaKole(31) = 8
+
+	End If	
+		
+
+		
+		If numer_klatki = 0  Then
+			
+									'*****
+								kl1 = kl	
+								kl0 = kl - 1
+								kl2 = kl + 1	
+								
+								If kl1 = 0 Then
+									kl0 = wielkoscKola -1
+								End If
+								
+								If kl1 = wielkoscKola -1 Then
+									kl2 = 0
+								End If
+								
+
+									'*****
+							
+									
+									cav1.DrawBitmap(bmp(miejsceNaKole(kl0)),Null,rect(0))  
+									cav1.DrawBitmap(bmp(miejsceNaKole(kl1)),Null,rect(1))  
+									cav1.DrawBitmap(bmp(miejsceNaKole(kl2)),Null,rect(2))  
+								
+										For i = 0 To 2
+											ivKoloNR.Invalidate2(rect(i))
+										Next
+								
+								Dim ggg As koloWynik
+									
+									ggg.linia1 = miejsceNaKole(kl0)
+									ggg.linia2 = 100
+									ggg.linia3 = miejsceNaKole(kl1)
+									ggg.linia4 = 100
+									ggg.linia5 = miejsceNaKole(kl2)
+									
+									
+									Return  ggg
+									
+									
+			
+													
+		Else If numer_klatki = 1  Then
+		
+							'****
+							
+							kl1 = kl	
+							kl0 = kl - 1
+							kl2 = kl + 1
+							
+							If kl1 = 0 Then
+								kl0 = wielkoscKola -1
+							End If
+							If kl1 = wielkoscKola -1 Then
+								kl2 = 0
+							End If
+						
+						
+							'****
+								
+									
+							cav1.DrawBitmap(bmp(miejsceNaKole(kl0)),Null,rect(3))  
+							cav1.DrawBitmap(bmp(miejsceNaKole(kl1)),Null,rect(4))
+							
+				
+								For i = 3 To 4
+									ivKoloNR.Invalidate2(rect(i))
+								Next
+									Dim ggg As koloWynik
+									
+									ggg.linia1 = 100
+									ggg.linia2 = miejsceNaKole(kl0)
+									ggg.linia3 = 100
+									ggg.linia4 = miejsceNaKole(kl1)
+									ggg.linia5 = 100
+							
+							Return  ggg							
+	
+		End If	
+		
+		
+
+End Sub
+
+
+Sub sprawdz(licz1 As Int,licz2 As Int,licz3 As Int) As Int
+	
+	Dim wygrana As Int
+'		Log(spinner(aa1 , iloscFigurNaKole,ivKolo1, 1 ,klatka(0)))
+'		Log(spinner(aa2 , iloscFigurNaKole,ivKolo2, 2 ,klatka(1)))
+'		Log(spinner(aa3, iloscFigurNaKole,ivKolo3, 3 ,klatka(2)))
+
+
+		' 7 siedem   -111 = 1   3000
+		' 8 samochod -112 = 2   1500
+		' 9 aparat   -222 = 8   375
+		' 10 ananas  -223 = 12  250
+		' 2 jabłko   -332 = 18  160
+		' 4 arbuz    -234 = 24  125
+		' 0 winogron -333 = 27  110
+		' 3 gruszka  -343 = 36   80
+		' 6 banany   -433 = 36   80
+		' 5 cytryna  -344 = 48   65
+		' 11 sliwka	 -434 = 48   65
+		' 1 wisnia   -444 = 64   50
+		
+		
+		' 7 siedem   -11 = 1   970
+		' 8 samochod -12 = 2   485
+		' 9 aparat   -22 = 8   240
+		' 10 ananas  -23 = 12  160
+		' 2 jabłko   -32 = 18  25
+		' 4 arbuz    -34 = 24  10
+		' 0 winogron -33 = 27  12
+		' 3 gruszka  -43 = 36  10 
+		' 6 banany   -33 = 36   10
+		' 5 cytryna  -44 = 48   10
+		' 11 sliwka	 -34 = 48   10
+		' 1 wisnia   -44 = 64   10
+		
+		' 1 wisnia   -4 = 64   2
+
+
+
+	' 0 winogron -333 = 27  110
+	If licz1 = 0 And licz2 = 0 And licz3 = 0 Then
+      wygrana = wygrana3_linia(0)
+	else if  licz2 = 0 And licz3 = 0 Then
+		wygrana = wygrana2_linia(0)
+	
+	
+	' 1 wisnia   -444 = 64   50	
+	else if	licz1 = 1 And licz2 = 1 And licz3 = 1 Then
+		wygrana = wygrana3_linia(1)
+		
+	else if  licz2 = 1 And licz3 = 1 Then
+		wygrana = wygrana2_linia(1)
+
+		zatrzymaj = zatrzymaj + 1
+	else if   licz3 = 1  Then
+		wygrana = wygrana1_linia(1)
+	
+	' 2 jabłko   -332 = 18  160	
+	else if	licz1 = 2 And licz2 = 2 And licz3 = 2 Then
+		wygrana = wygrana3_linia(2)
+	else if	 licz2 = 2 And licz3 = 2 Then
+		wygrana = wygrana2_linia(2)
+		
+	' 3 gruszka  -343 = 36   80	
+	else if licz1 = 3 And licz2 = 3 And licz3 = 3 Then
+		wygrana = wygrana3_linia(3)
+	else if  licz2 = 3 And licz3 = 3 Then
+		wygrana = wygrana2_linia(3)
+		
+	' 4 arbuz    -234 = 24  125
+	else if	licz1 = 4 And licz2 = 4 And licz3 = 4 Then
+		wygrana = wygrana3_linia(4)
+	else if	 licz2 = 4 And licz3 = 4 Then
+		wygrana = wygrana2_linia(4)
+		
+	
+	' 5 cytryna  -344 = 48   65	
+	else if	licz1 = 5 And licz2 = 5 And licz3 = 5 Then
+		wygrana = wygrana3_linia(5)
+	else if	 licz2 = 5 And licz3 = 5 Then
+		wygrana = wygrana2_linia(5)
+	
+	
+	' 6 banany   -433 = 36   80
+	else if	licz1 = 6 And licz2 = 6 And licz3 = 6 Then
+		wygrana = wygrana3_linia(6)	
+	else if	 licz2 = 6 And licz3 = 6 Then
+		wygrana = wygrana2_linia(6)
+		
+	
+	' 7 siedem   -111 = 1   3000	
+	else if	licz1 = 7 And licz2 = 7 And licz3 = 7 Then
+		wygrana = wygrana3_linia(7)
+		autostart = False
+		timer5.Enabled=False
+		btnAutoSpin.SetBackgroundImage(bmpPrzyciskRed)
+	else if	 licz2 = 7 And licz3 = 7 Then
+		wygrana = wygrana2_linia(7)
+	
+	
+	' 8 samochod -112 = 2   1500	
+	else if	licz1=8 And licz2=8 And licz3=8 Then
+		wygrana = wygrana3_linia(8)
+	else if	 licz2=8 And licz3=8 Then
+		wygrana = wygrana2_linia(8)
+		
+	' 9 aparat   -222 = 8   375	
+	else if	licz1=9 And licz2=9 And licz3=9 Then
+		wygrana = wygrana3_linia(9)
+	else if	 licz2=9 And licz3=9 Then
+		wygrana = wygrana2_linia(9)
+	
+	' 10 ananas  -223 = 12  250
+	else if	licz1=10 And licz2=10 And licz3=10 Then
+		wygrana = wygrana3_linia(10)
+	else if	 licz2=10 And licz3=10 Then
+		wygrana = wygrana2_linia(10)
+		
+	' 11 sliwka	 -434 = 48   65	
+	else if	licz1=11 And licz2=11 And licz3=11 Then
+		wygrana = wygrana3_linia(11)
+	else if	 licz2=11 And licz3=11 Then
+		wygrana = wygrana2_linia(11)			
+	Else 
+		wygrana=0
+	End If
+		wygrana = wygrana * stawka
+'		dollar = dollar + wygrana
+'		lbWygrana.Text = znakWaluty & wygrana 
+'		wygranychDolcow = wygranychDolcow + wygrana
+'		lbWygranychDolcow.Text = "Total Pay OUT " &  znakWaluty & wygranychDolcow
+		
+	If wygrana > 0 Then
+		
+		kolo_stop = False
+		#if test
+		lvWygranych.AddSingleLine(licz1 & " . " & licz2 &" . " & licz3 & "  wygrana = " & wygrana)
+		listaWygranych.Add(licz1 & " . " & licz2 &" . " & licz3 & "  wygrana = " & wygrana)
+		#end if
+		Log("trafiono : " & licz1 & " . " & licz2 &" . " & licz3 & "  wygrana = " & wygrana)
+		If wygrana >= 2 And wygrana < 50 * stawka   Then
+			timer5.Interval= 6000
+			If soundON Then
+				mp.Load(File.DirAssets,"d2.mp3")
+				mp.Looping = False
+				mp.Play
+			End If	
+		Else If wygrana >= 50 * stawka   Then
+			
+			
+			timer5.Interval= 12000
+			If soundON Then
+				mp.Load(File.DirAssets,"Slot Win Sound 2.aac")
+				mp.Looping = False
+				mp.Play
+			End If
+			przyciskiSTOP
+		End If	
+	Else
+		
+		
+
+		timer5.Interval= timer5_czas		
+	End If
+	
+	
+	Return wygrana
+End Sub
+
+Sub przyciskiSTOP
+		If kolo_stop = True Then
+			Button1.SetBackgroundImage(bmpPrzyciskGreen)
+			Button2.SetBackgroundImage(bmpPrzyciskGreen)
+			Button3.SetBackgroundImage(bmpPrzyciskGreen)
+		Else
+			Button1.SetBackgroundImage(bmpPrzyciskDarkGreen)
+			Button2.SetBackgroundImage(bmpPrzyciskDarkGreen)
+			Button3.SetBackgroundImage(bmpPrzyciskDarkGreen)
+		End If	
+End Sub
+
+Sub timer4_Tick
+	
+			
+				przyciskiSTOP	
+					
+
+timer1.Enabled= False
+timer2.Enabled= False
+timer3.Enabled= False
+
+ If mp.IsPlaying Then
+ 	mp.Stop
+End If
+
+
+	
+			If boo_sprawdz Then
+'				sprawdz(w1,w2,w3)
+									liniaOK(w1,w2,w3)
+				boo_sprawdz=False
+			End If
+			
+			lbDollars.Text = znakWaluty & dollar
+			timer4.Enabled = False
+			booSpin1=False
+			booSpin2=False
+			booSpin3=False
+
+		
+			btnStart.Text = "Start"
+
+			
+			If autostart Then
+				timer5.Enabled=True
+			End If
+			
+			
+	
+End Sub
+
+Sub liniaOK(spiner1 As koloWynik,spiner2 As koloWynik,spiner3 As koloWynik)
+	Dim linia(3,5) As Int
+	Dim wygrana(ileLiniWygrywa) As Int
+	Dim wygranaRazem As Int
+	Dim booLiniaWygrala(ileLiniWygrywa) As Boolean
+	
+	linia(0,0)=spiner1.linia1
+	linia(0,1)=spiner1.linia2
+	linia(0,2)=spiner1.linia3
+	linia(0,3)=spiner1.linia4
+	linia(0,4)=spiner1.linia5
+	
+	linia(1,0)=spiner2.linia1
+	linia(1,1)=spiner2.linia2
+	linia(1,2)=spiner2.linia3
+	linia(1,3)=spiner2.linia4
+	linia(1,4)=spiner2.linia5
+	
+	linia(2,0)=spiner3.linia1
+	linia(2,1)=spiner3.linia2
+	linia(2,2)=spiner3.linia3
+	linia(2,3)=spiner3.linia4
+	linia(2,4)=spiner3.linia5
+	
+
+
+
+	
+
+	
+
+'linia 1   2,2,2
+'linia 2   1,1,1
+'linia 3   3,3,3
+'linia 4   0,0,0
+'linia 5   4,4,4
+'linia 6   0,1,2
+'linia 7   1,2,3
+'linia 8   2,3,4
+'linia 9   2,1,0
+'linia 10  3,2,1
+'linia 11  4,3,2	
+
+
+
+Log("*******************")
+				
+		Dim iii As Int		
+	For	Each kk As payLine In listaPlacacychLini
+	
+		If ileLiniZagrac >= iii+1 Then 
+			wygrana(iii) =  sprawdz(linia(0,kk.kolo1poz),linia(1,kk.kolo2poz),linia(2,kk.kolo3poz))	
+			If sprawdz(linia(0,kk.kolo1poz),linia(1,kk.kolo2poz),linia(2,kk.kolo3poz)) > 0 Then booLiniaWygrala(iii) = True
+				
+		End If
+		iii=iii+1
+	Next
+		
+		
+		
+		
+		
+		For i = 0 To ileLiniWygrywa -1
+			wygranaRazem= wygranaRazem + wygrana(i)
+		Next
+	
+		dollar = dollar + wygranaRazem
+		lbWygrana.Text = znakWaluty & wygranaRazem
+		wygranychDolcow = wygranychDolcow + wygranaRazem
+		lbWygranychDolcow.Text = "Total Pay OUT " &  znakWaluty & wygranychDolcow
+		
+		Dim wygranychLini As Int
+		
+		For i = 0 To ileLiniWygrywa -1
+			If booLiniaWygrala(i) = True Then 
+				wygranychLini = wygranychLini + 1
+				ivLinie(i).Visible=True
+			End If
+			
+		Next
+		#If test
+		If wygranychLini <> 0 Then
+			ToastMessageShow("wygranych lini "& wygranychLini,False)
+		End If
+		#End if
+		
+	
+End Sub
+
+
+Sub timer5_Tick
+	
+		start
+	
+End Sub
+	
+
+Sub btnStart_Click
+	
+	If 	timer4.Enabled= False Then
+		start
+	Else
+			autoStartOFF
+			
+		Select Rnd(0,4)
+				Case 0 
+					timer4.Interval = 100
+				Case 1	
+					timer4.Interval = 200
+				Case 2	
+					timer4.Interval = 300
+				Case 3	
+					timer4.Interval = 400
+			End Select
+	End If					
+End Sub
+
+Sub start
+	
+	
+	Log("poziom ma punktow " &poziomMaPunktow)
+	
+	If booSpin1 = False Or booSpin2 = False Or booSpin3 = False Then
+			If timer4.Enabled= False Then	
+			If dollar - (stawka * ileLiniZagrac) >=0 Then
+				
+				
+				For i =0 To ileLiniWygrywa -1
+					ivLinie(i).Visible=False
+				Next
+				
+				
+				If booSpin1 = False And booSpin2 = False And booSpin3 = False Then
+					kolo_stop = True
+				else If booSpin1 = True Or booSpin2 = True Or booSpin3 = True Then
+					kolo_stop = False
+				Else
+					kolo_stop = True	
+				End If
+				
+				If soundON Then
+					mp.Load(File.DirAssets,"Slot Machine Spin Loop.mp3")
+					mp.Play
+				End If	
+				Select Rnd(0,5)
+					Case 0 
+						timer5_czas=2300
+						timer4.Initialize("timer4",2100)
+					Case 1
+						timer5_czas=2100	
+						timer4.Initialize("timer4",1900)
+					Case 2	
+						timer5_czas=2200
+						timer4.Initialize("timer4",2000)
+					Case 3	
+						timer5_czas=2250
+						timer4.Initialize("timer4",2050)
+					Case 4	
+						timer5_czas=2150
+						timer4.Initialize("timer4",1950)
+				End Select		
+						
+				If booSpin1 = False Then
+					timer1.Enabled = True
+					
+
+				End If
+				If booSpin2 = False Then
+					timer2.Enabled = True
+					
+					
+				End If
+				If booSpin3 = False Then
+					timer3.Enabled = True	
+					
+				End If
+				
+				If booSpin1 = False And booSpin2 = False And booSpin3 = False Then
+					Button1.SetBackgroundImage(bmpPrzyciskDarkGreen)
+					Button2.SetBackgroundImage(bmpPrzyciskDarkGreen)
+					Button3.SetBackgroundImage(bmpPrzyciskDarkGreen)
+				End If
+				
+'				If kolo_stop = False Then
+'					kolo_stop = True
+'				Else
+'					kolo_stop = False
+'				End If	
+			
+
+					
+					
+					timer4.Enabled = True
+					dollar = dollar - (stawka * ileLiniZagrac)
+					przegranychDolcow = przegranychDolcow + (stawka * ileLiniZagrac)
+					lbPrzegranychDolcow.Text = "Total Pay In " &  znakWaluty & przegranychDolcow
+					lbDollars.Text = znakWaluty & dollar
+					btnStart.Text = "Stop"
+					boo_sprawdz=True
+					sprawdzPoziomGry
+			Else
+				autoStartOFF
+				ToastMessageShow(tlumacz.txt_BRAK_KASY,False)
+			End If	
+		Else
+
+			
+		End If		
+	End If		
+	
+End Sub
+
+
+Sub Button3_Click
+	If kolo_stop = True And timer4.Enabled=False Then
+		
+				dzwiekKlawisza
+		
+		If booSpin3 = True Then
+			booSpin3 = False
+			Button3.SetBackgroundImage(bmpPrzyciskGreen)
+		Else	
+			booSpin3 = True
+			Button3.SetBackgroundImage(bmpPrzyciskLightGreen)
+		End If	
+	End If	
+End Sub
+
+Sub Button2_Click
+	If kolo_stop = True And timer4.Enabled=False Then
+		
+				dzwiekKlawisza
+		
+		If booSpin2 = True Then
+			booSpin2 = False
+			Button2.SetBackgroundImage(bmpPrzyciskGreen)
+		Else	
+			booSpin2 = True
+			Button2.SetBackgroundImage(bmpPrzyciskLightGreen)
+		End If	
+	End If	
+End Sub
+
+Sub Button1_Click
+If kolo_stop = True And timer4.Enabled=False Then
+	
+				dzwiekKlawisza
+	
+		If booSpin1 = True Then
+			booSpin1 = False
+			Button1.SetBackgroundImage(bmpPrzyciskGreen)
+		Else	
+			booSpin1 = True
+			Button1.SetBackgroundImage(bmpPrzyciskLightGreen)
+		End If		
+	End If	
+End Sub	
+
+
+
+
+Sub btnStawka_LongClick
+	btnMaxBet_Click
+End Sub
+
+
+
+Sub btnAutoSpin_Click
+	
+	
+	If autostart Then
+		autoStartOFF
+	Else
+		autoStartON
+		start
+	End If
+End Sub
+
+Sub autoStartON
+		timer5.Initialize("timer5",2200)
+		timer5.Enabled=True
+		autostart=True	
+		btnAutoSpin.SetBackgroundImage(bmpPrzyciskGreen)
+		ph.KeepAlive(True)
+End Sub
+Sub autoStartOFF
+		autostart=False
+		timer5.Enabled=False
+		btnAutoSpin.SetBackgroundImage(bmpPrzyciskRed)
+		ph.ReleaseKeepAlive
+End Sub
+Sub lbPrzegranychDolcow_LongClick
+	#if test
+		przegranychDolcow = 0
+		lbPrzegranychDolcow.Text = przegranychDolcow
+	#end if	
+End Sub
+
+Sub lbWygranychDolcow_LongClick
+	#if test
+		wygranychDolcow= 0 
+		lbWygranychDolcow.Text = wygranychDolcow
+	#end if	
+End Sub
+
+Sub btnSoundOnOff_Click
+	
+	If soundON = True Then
+		soundON = False
+		btnSoundOnOff.SetBackgroundImage(bmpSoundOFF)
+	Else
+		soundON = True
+		btnSoundOnOff.SetBackgroundImage(bmpSoundON)
+	End If
+	dzwiekKlawisza
+End Sub
+
+Sub lbDollars_LongClick
+	#if test
+		dollar = 100
+		lbDollars.Text = znakWaluty & dollar
+	#end if	
+End Sub
+
+'********************************************************************************
+'************** OBLICZANIE TABELI WYGRANYCH *************************************
+'********************************************************************************
+
+Sub oblicz_mozliwisc_wygranej 
+	
+		
+		
+	    ' 0 winogron -333 = 27   
+		' 1 wisnia   -555 = 125   
+		' 2 jabłko   -333 = 27  
+		' 3 gruszka  -333 = 27 
+		' 4 arbuz    -333 = 27  
+		' 5 cytryna  -344 = 48   
+		' 6 banany   -444 = 64   
+		' 7 siedem   -211 = 2     1.4
+		' 8 sliwka	 -444 = 64   
+		' 9 ananas   -222 = 8  
+		
+		
+		' 0 winogron -33 = 27   
+		' 1 wisnia   -55 = 125   
+		' 2 jabłko   -33 = 27  
+		' 3 gruszka  -33 = 27 
+		' 4 arbuz    -33 = 27  
+		' 5 cytryna  -44 = 48   
+		' 6 banany   -44 = 64   
+		' 7 siedem   -11 = 2     
+		' 8 sliwka	 -44 = 64   
+		' 9 ananas   -22 = 8  
+		
+		' 1 wisnia   -5 = 64  5120
+		
+		
+	
+	Dim total_mozliwosci As Double
+	Dim figura(35) As Double
+	Dim wynik3(35) As Double
+	Dim wynik2(35) As Double
+	Dim wynik1(35) As Double
+	
+	Dim ww As Double
+	
+	
+	
+	wygrana3_linia(0) = 120 
+	wygrana3_linia(1) = 30 
+	wygrana3_linia(2) = 120
+	wygrana3_linia(3) = 120 
+	wygrana3_linia(4) = 120 
+	wygrana3_linia(5) = 80 
+	wygrana3_linia(6) = 60 
+	wygrana3_linia(7) = 500 
+	wygrana3_linia(8) = 60 
+	wygrana3_linia(9) = 220
+	
+	wygrana2_linia(0) = 12
+	wygrana2_linia(1) = 5
+	wygrana2_linia(2) = 12
+	wygrana2_linia(3) = 12
+	wygrana2_linia(4) = 12
+	wygrana2_linia(5) = 7
+	wygrana2_linia(6)= 7
+	wygrana2_linia(7) = 100 
+	wygrana2_linia(8) = 7
+	wygrana2_linia(9) = 30
+	
+	
+	wygrana1_linia(1) = 1
+	
+	
+
+End Sub
+
+
+
+
+
+
+#if test
+Sub pnlPayTable_LongClick
+	If pnlWygrane.Visible = True Then
+		pnlWygrane.Visible = False
+	Else
+		pnlWygrane.Visible = True	
+	End If
+	
+End Sub
+#end if
+Sub pnlPayTable_Click
+	
+	pnlTable.BringToFront
+	pnlTable.Visible = True
+	
+	ListView1.BringToFront
+	ListView1.Color = Colors.blue
+	
+	ListView1.BringToFront
+	
+	
+	ListView1.Clear
+'	For i = 0 To 9
+'	
+'		ListView1.AddTwoLinesAndBitmap(" X 3  "& znakWaluty & (wygrana3_linia(i) * stawka),"",bmp(i))
+'		ListView1.AddTwoLinesAndBitmap(" X 2  "& znakWaluty & (wygrana2_linia(i) * stawka),"",bmp(i))
+'		
+'		If wygrana1_linia(i) > 0 Then
+'			ListView1.AddTwoLinesAndBitmap(" X  1 "& znakWaluty & (wygrana1_linia(i) * stawka),"",bmp(i))
+'		End If
+'	Next
+		
+		 
+		
+		 
+		
+		
+'		wygrana3_linia(7) = 500 
+'		wygrana3_linia(9) = 220
+'		wygrana3_linia(0) = 120
+'		wygrana3_linia(2) = 120
+'		wygrana3_linia(3) = 120 
+'		wygrana3_linia(4) = 120
+'		wygrana3_linia(5) = 80 
+'		wygrana3_linia(8) = 60 
+'		wygrana3_linia(6) = 60 
+'		wygrana3_linia(1) = 30 
+		
+'		
+'		Dim const ananas As Int = 9
+'	Dim const sliwka As Int = 8
+'	Dim const siedem As Int = 7
+'	Dim const banan As Int = 6
+'	Dim const cytryna As Int = 5
+'	Dim const arbuz As Int = 4
+'	Dim const gruszka As Int = 3
+'	Dim const jablko As Int = 2
+'	Dim const wisnia As Int = 1
+'	Dim const winogron As Int = 0
+	
+
+		ListView1.AddTwoLinesAndBitmap(" X 3  "& znakWaluty & (wygrana3_linia(siedem) * stawka),"",bmp(siedem))
+		ListView1.AddTwoLinesAndBitmap(" X 2  "& znakWaluty & (wygrana2_linia(siedem) * stawka),"",bmp(siedem))
+		
+		ListView1.AddTwoLinesAndBitmap(" X 3  "& znakWaluty & (wygrana3_linia(ananas) * stawka),"",bmp(ananas))
+		ListView1.AddTwoLinesAndBitmap(" X 2  "& znakWaluty & (wygrana2_linia(ananas) * stawka),"",bmp(ananas))
+		
+		ListView1.AddTwoLinesAndBitmap(" X 3  "& znakWaluty & (wygrana3_linia(winogron) * stawka),"",bmp(winogron))
+		ListView1.AddTwoLinesAndBitmap(" X 2  "& znakWaluty & (wygrana2_linia(winogron) * stawka),"",bmp(winogron))
+		
+		ListView1.AddTwoLinesAndBitmap(" X 3  "& znakWaluty & (wygrana3_linia(jablko) * stawka),"",bmp(jablko))
+		ListView1.AddTwoLinesAndBitmap(" X 2  "& znakWaluty & (wygrana2_linia(jablko) * stawka),"",bmp(jablko))
+		
+		ListView1.AddTwoLinesAndBitmap(" X 3  "& znakWaluty & (wygrana3_linia(gruszka) * stawka),"",bmp(gruszka))
+		ListView1.AddTwoLinesAndBitmap(" X 2  "& znakWaluty & (wygrana2_linia(gruszka) * stawka),"",bmp(gruszka))
+		
+		ListView1.AddTwoLinesAndBitmap(" X 3  "& znakWaluty & (wygrana3_linia(arbuz) * stawka),"",bmp(arbuz))
+		ListView1.AddTwoLinesAndBitmap(" X 2  "& znakWaluty & (wygrana2_linia(arbuz) * stawka),"",bmp(arbuz))
+				
+		ListView1.AddTwoLinesAndBitmap(" X 3  "& znakWaluty & (wygrana3_linia(cytryna) * stawka),"",bmp(cytryna))
+		ListView1.AddTwoLinesAndBitmap(" X 2  "& znakWaluty & (wygrana2_linia(cytryna) * stawka),"",bmp(cytryna))
+		
+		ListView1.AddTwoLinesAndBitmap(" X 3  "& znakWaluty & (wygrana3_linia(sliwka) * stawka),"",bmp(sliwka))
+		ListView1.AddTwoLinesAndBitmap(" X 2  "& znakWaluty & (wygrana2_linia(sliwka) * stawka),"",bmp(sliwka))
+
+		ListView1.AddTwoLinesAndBitmap(" X 3  "& znakWaluty & (wygrana3_linia(banan) * stawka),"",bmp(banan))
+		ListView1.AddTwoLinesAndBitmap(" X 2  "& znakWaluty & (wygrana2_linia(banan) * stawka),"",bmp(banan))
+		
+		ListView1.AddTwoLinesAndBitmap(" X 3  "& znakWaluty & (wygrana3_linia(wisnia) * stawka),"",bmp(wisnia))
+		ListView1.AddTwoLinesAndBitmap(" X 2  "& znakWaluty & (wygrana2_linia(wisnia) * stawka),"",bmp(wisnia))
+		ListView1.AddTwoLinesAndBitmap(" X 1  "& znakWaluty & (wygrana1_linia(wisnia) * stawka),"",bmp(wisnia))
+		
+	
+	ListView1.Invalidate
+End Sub
+
+
+
+Sub ListView1_ItemClick (Position As Int, Value As Object)
+	pnlTable.Visible= False
+End Sub
+
+Sub sprawdzPoziomGry
+	
+	
+	
+	
+If nextPoziomAt > 0 Then
+	If przegranychDolcow >= nextPoziomAt Then
+		poziomGry = poziomGry + 1
+		poziomStart = nextPoziomAt
+		poziomMaPunktow = Ceil(poziomMaPunktow + poziomMaPunktow *0.33)
+		nextPoziomAt =poziomStart + poziomMaPunktow
+		nagrodaZaPoziom
+		
+	End If
+	
+	pozionStartAt = poziomStart
+	nextPoziomAt =  pozionStartAt + poziomMaPunktow
+
+	
+	procentyPoziomu = (przegranychDolcow - pozionStartAt)* 100 / poziomMaPunktow
+	lbPoziomGry.Text = "Lv."& poziomGry & "  "& procentyPoziomu & " %"
+Else
+	nextPoziomAt=150
+	poziomMaPunktow =150
+		
+End If		
+	
+	
+	
+	Select poziomGry
+		Case 0
+			stawkaPoziom = 3
+		Case 1
+			stawkaPoziom = 3
+		Case 2
+			stawkaPoziom = 3
+		Case 3
+			stawkaPoziom = 5
+		Case 4
+			stawkaPoziom = 5
+		Case 5
+			stawkaPoziom = 5
+		Case Else	
+			stawkaPoziom = poziomGry * 2 + 2
+	End Select
+	
+	
+	Do While stawkaMax < stawkaPoziom
+		If stawkaMax < 10 Then
+			stawkaMax = stawkaMax + 1
+		Else
+			stawkaMax = stawkaMax + 5
+		End If	
+		
+		
+	
+	Loop	
+		
+		If stawkaMax > stawkaPoziom Then
+			If stawkaMax < 10 Then
+				stawkaMax = stawkaMax - 1
+			Else
+				stawkaMax = stawkaMax - 5
+			End If	
+		End If
+	
+	
+		Log("stawkaMax = " & stawkaMax)
+	
+	btnStawka.Text = "Bet"& CRLF & "1-"& stawkaMax
+	btnIleLiniZagrac.Text="Line" & CRLF &ileLiniZagrac
+	btnMaxBet.Text = "Max" & CRLF & "Bet"
+	lbStawka.Text =   znakWaluty & stawka
+	
+
+	
+End Sub
+
+Sub nagrodaZaPoziom
+	Dim bonus_za_poziom As Int
+	bonus_za_poziom = poziomMaPunktow / 10
+	
+	dollar= dollar + bonus_za_poziom
+	ToastMessageShow(tlumacz.txt_nextLevel & tlumacz.txt_Otrzymales & znakWaluty & bonus_za_poziom , False)
+End Sub
+
+
+Sub lbPoziomGry_Click
+	
+End Sub
+
+Sub lbPoziomGry_LongClick
+	#if test
+		poziomGry = 0
+		dollar = 1000
+		przegranychDolcow=0
+		wygranychDolcow=0
+		poziomMaPunktow=150	
+		
+	#end if	
+End Sub
+
+
+
+
+
+Sub timer6_Tick
+	
+	
+'	lbCzasowyBonus.Text = DateTime.Time(DateTime.Now)
+If bonus_2h  > DateTime.Now Then
+	lbCzasowyBonus.TextColor = Colors.Black
+	lbCzasowyBonus.SetBackgroundImage(bmpPrzyciskRed)
+	lbCzasowyBonus.Text = DateTime.Time(bonus_2h - (DateTime.Now + DateTime.TicksPerHour))
+Else
+	lbCzasowyBonus.TextColor = Colors.Black
+	lbCzasowyBonus.SetBackgroundImage(bmpPrzyciskGreen)
+	lbCzasowyBonus.Text = "BONUS $" & (bonusCzasowy )
+	boo_czasowyBonus = True
+End If		
+'	Log(bonus_2h - (DateTime.Now + DateTime.TicksPerHour))
+	
+End Sub
+
+Sub lbCzasowyBonus_Click
+	If bonus_2h  < DateTime.Now Then
+		If boo_czasowyBonus = True Then
+			
+			bonus_2h = DateTime.Now + czas_do_nastepnego_bonusu 
+			
+
+			dollar = dollar +  bonusCzasowy 
+			lbDollars.Text = znakWaluty & dollar
+			Log("dodano bonus czasowy $" & bonusCzasowy)
+			boo_czasowyBonus = False
+		Else
+			
+
+		End If		
+	Else
+
+			Log("nie dodano NIC")
+	End If		
+	
+End Sub
+
+Sub btnMaxBet_Click
+
+
+	If timer1.Enabled = False And timer2.Enabled = False And timer3.Enabled = False Then
+			dzwiekKlawisza
+			If dollar > stawkaMax Then
+				stawka = stawkaMax	
+			Else
+				stawka = dollar
+			End If		
+		
+		
+		zatrzymaj = 0
+		
+		lbStawka.Text =    znakWaluty & stawka
+	End If	
+	
+End Sub
+
+Sub dzwiekKlawisza
+	If soundON Then
+		mp.Load(File.DirAssets,"Change slot bet sound effect.mp3")
+		mp.Play
+	End If
+End Sub
+
+Sub btnStawka_Click
+	
+
+
+	If timer1.Enabled = False And timer2.Enabled = False And timer3.Enabled = False Then
+		
+				dzwiekKlawisza	
+		
+		If stawka < 10 Then
+			stawka=stawka + 1
+		Else
+			stawka=stawka + 5
+		End If	
+		If stawka > stawkaPoziom Or stawka > dollar Then
+			stawka=1
+		End If
+		zatrzymaj = 0
+		lbStawka.Text =  znakWaluty & stawka
+	End If	
+	ToastMessageShow("LongClick for MaxBet",False)
+End Sub
+
+
+
+Sub pnlTable_Click
+	pnlTable.Visible = False
+End Sub
+
+Sub pnlWygrane_Click
+	If pnlWygrane.Visible Then
+		pnlWygrane.Visible = False
+	Else
+		pnlWygrane.Visible = True
+		
+	End If
+End Sub
+
+
+Sub lvWygranych_ItemClick (Position As Int, Value As Object)
+	pnlWygrane.Visible = False
+End Sub
+
+
+
+
+
+Sub btnKup_Click
+	
+	
+	If manager.SubscriptionsSupported Then
+		If kupioneMap.ContainsKey("zx100tys") Then
+				manager.ConsumeProduct(kupioneMap.get("zx100tys"))
+		Else
+			manager.RequestPayment("zx100tys","inapp","zx100tys") 'request purchase with ID "zx10tys"
+		
+		End If	
+	Else
+		#If traker
+			tracker.SendScreenView("bład manager.SubscriptionsSupported = false ")
+		#End if	
+	End If	
+End Sub
+	
+Sub btnKup_LongClick
+	
+	#if test
+	dollar=dollar+100000
+	#End If
+End Sub
+
+
+
+
+Sub manager_BillingSupported (Supported As Boolean, Message As String) 'First we check if Billing is supported
+   Log(Supported & ", " & Message)
+   Log("Subscriptions supported: " & manager.SubscriptionsSupported)	
+   If Supported Then manager.GetOwnedProducts 'if support true then get owend product by this user
+   
+End Sub
+
+Sub manager_OwnedProducts (Success As Boolean, purchases As Map)
+   Log("manager_OwnedProducts = " & Success)
+ 	
+   If Success Then
+      Log(purchases)
+			kupioneMap = purchases
+'			File.WriteMap(File.DirInternal,"ggg.gg",kupioneMap)	
+   End If		
+End Sub
+
+Sub manager_PurchaseCompleted (Success As Boolean, Product As Purchase)
+	Log(Product)
+	Log("manager_PurchaseCompleted = "&Success)
+	
+	If Success Then
+		
+		If Product.ProductId = "zx10tys" Then
+			Dim kup_10tys As Int
+			kup_10tys = 10000
+			manager.ConsumeProduct(Product)
+			 If znakWaluty = "$" Then
+			  	Msgbox(tlumacz.txt_dodano & znakWaluty & kup_10tys ,tlumacz.txt_dzieki)
+			 Else 
+			  	Msgbox(tlumacz.txt_dodano & kup_10tys & znakWaluty  ,tlumacz.txt_dzieki)
+			 End If
+				dollar = dollar + kup_10tys
+				lbDollars.Text = znakWaluty & dollar
+				Log("dolary = "& dollar)
+				zapiszStanGry
+		else If Product.ProductId = "zx100tys" Then		
+			Dim kup_100tys As Int
+			kup_100tys = 100000
+			manager.ConsumeProduct(Product)
+			 If znakWaluty = "$" Then
+			  	Msgbox(tlumacz.txt_dodano & znakWaluty & kup_100tys ,tlumacz.txt_dzieki)
+			 Else 
+			  	Msgbox(tlumacz.txt_dodano & kup_100tys & znakWaluty  ,tlumacz.txt_dzieki)
+			 End If
+				dollar = dollar + kup_100tys
+				lbDollars.Text = znakWaluty & dollar
+				Log("dolary = "& dollar)
+				zapiszStanGry		
+				
+		End If	 
+		
+	Else
+		
+	End If		
+End Sub
+
+Sub btnIleLiniZagrac_LongClick
+	ileLiniZagrac=1
+End Sub
+Sub btnIleLiniZagrac_Click
+	ileLiniZagrac=ileLiniZagrac + 1
+
+	
+		If ileLiniZagrac > 11 Then 
+		ileLiniZagrac = 1
+		For i = 0 To ileLiniWygrywa -1
+			ivLinie(i).Visible=False
+		Next
+		
+	End If
+	
+	ivLinie(ileLiniZagrac - 1).Visible=True
+	btnIleLiniZagrac.Text="Line" & CRLF &ileLiniZagrac
+	
+	
+	
+	
+	dzwiekKlawisza
+End Sub
+
+Sub uzupelnijListePlac	As List
+	Dim lst1 As List
+	lst1.Initialize
+	Dim liniaPay(ileLiniWygrywa) As payLine
+	
+	Dim lls1 As List
+	lls1.Initialize
+
+
+'linia 1   2,2,2
+'linia 2   1,1,1
+'linia 3   3,3,3
+'linia 4   0,0,0
+'linia 5   4,4,4
+'linia 6   0,1,2
+'linia 7   1,2,3
+'linia 8   2,3,4
+'linia 9   2,1,0
+'linia 10  3,2,1
+'linia 11  4,3,2	
+
+
+	lls1.AddAll(Array As Int(2,2,2))  '1
+	lls1.AddAll(Array As Int(1,1,1))	'2
+	lls1.AddAll(Array As Int(3,3,3))	'3
+	lls1.AddAll(Array As Int(0,0,0))	'4
+	lls1.AddAll(Array As Int(4,4,4))	'5
+	lls1.AddAll(Array As Int(0,1,2))	'6
+	lls1.AddAll(Array As Int(1,2,3))	'7
+	lls1.AddAll(Array As Int(2,3,4))	'8	
+	lls1.AddAll(Array As Int(2,1,0))	'9
+	lls1.AddAll(Array As Int(3,2,1))	'10
+	lls1.AddAll(Array As Int(4,3,2))	'11
+	
+	lls1.AddAll(Array As Int(0,1,0))	'12
+	lls1.AddAll(Array As Int(0,2,0))	'13
+	lls1.AddAll(Array As Int(0,3,0))	'14
+	lls1.AddAll(Array As Int(0,4,0))	'15
+	lls1.AddAll(Array As Int(1,0,1))	'16
+	lls1.AddAll(Array As Int(1,2,1))	'17
+	lls1.AddAll(Array As Int(1,3,1))	'18
+	lls1.AddAll(Array As Int(1,4,1))	'19
+	lls1.AddAll(Array As Int(2,0,2))	'20
+	lls1.AddAll(Array As Int(2,1,2))	'21
+	lls1.AddAll(Array As Int(2,3,2))	'22
+	lls1.AddAll(Array As Int(2,4,2))	'23
+	lls1.AddAll(Array As Int(3,0,3))	'24
+	lls1.AddAll(Array As Int(3,1,3))	'26
+	lls1.AddAll(Array As Int(3,2,3))	'27
+	lls1.AddAll(Array As Int(3,4,3))	'28
+	lls1.AddAll(Array As Int(4,0,4))	'29
+	lls1.AddAll(Array As Int(4,1,4))	'30
+	lls1.AddAll(Array As Int(4,2,4))	'31
+	lls1.AddAll(Array As Int(4,3,4))	'32
+	lls1.AddAll(Array As Int(0,1,1))	'33
+	lls1.AddAll(Array As Int(0,2,2))	'34
+	lls1.AddAll(Array As Int(0,3,3))	'35
+	lls1.AddAll(Array As Int(0,4,4))	'36
+	lls1.AddAll(Array As Int(1,0,0))	'37
+	lls1.AddAll(Array As Int(1,2,2))	'38
+	lls1.AddAll(Array As Int(1,3,3))	'39
+	lls1.AddAll(Array As Int(1,4,4))	'40
+	lls1.AddAll(Array As Int(2,0,0))	'41
+	lls1.AddAll(Array As Int(2,1,1))	'42
+	lls1.AddAll(Array As Int(2,3,3))	'43
+	lls1.AddAll(Array As Int(2,4,4))	'44
+	lls1.AddAll(Array As Int(3,0,0))	'45
+	lls1.AddAll(Array As Int(3,1,1))	'46
+	lls1.AddAll(Array As Int(3,2,2))	'47
+	lls1.AddAll(Array As Int(3,4,4))	'48
+	lls1.AddAll(Array As Int(4,0,0))	'49
+	lls1.AddAll(Array As Int(4,1,1))	'50
+	lls1.AddAll(Array As Int(4,2,2))	'51
+	lls1.AddAll(Array As Int(4,3,3))	'52
+	lls1.AddAll(Array As Int(0,0,1))	'53
+	lls1.AddAll(Array As Int(0,0,2))	'54
+	lls1.AddAll(Array As Int(0,0,3))	'55
+	lls1.AddAll(Array As Int(0,0,4))	'56
+	lls1.AddAll(Array As Int(1,1,0))	'57
+	lls1.AddAll(Array As Int(1,1,2))	'58
+	lls1.AddAll(Array As Int(1,1,3))	'59
+	lls1.AddAll(Array As Int(1,1,4))	'60
+	lls1.AddAll(Array As Int(2,2,0))	'61
+	lls1.AddAll(Array As Int(2,2,1))	'62
+	lls1.AddAll(Array As Int(2,2,3))	'63
+	lls1.AddAll(Array As Int(2,2,4))	'64
+	lls1.AddAll(Array As Int(3,3,0))	'65
+	lls1.AddAll(Array As Int(3,3,1))	'66
+	lls1.AddAll(Array As Int(3,3,2))	'67
+	lls1.AddAll(Array As Int(3,3,4))	'68
+	lls1.AddAll(Array As Int(4,4,0))	'69
+	lls1.AddAll(Array As Int(4,4,1))	'70
+	lls1.AddAll(Array As Int(4,4,2))	'71
+	lls1.AddAll(Array As Int(4,4,3))	'72
+
+
+
+	Log("lis1 size = "&lls1.Size)
+	Log(lls1)
+	
+	Dim jk ,jl As Int
+	For Each cc As Int In lls1
+		Log("ccccccc = "& cc)
+		If jk=0 Then liniaPay(jl).kolo1poz= cc
+		If jk=1 Then liniaPay(jl).kolo2poz= cc
+		If jk=2 Then liniaPay(jl).kolo3poz= cc
+		jk=jk+1
+		If jk >2 Then 
+			jk=0
+			jl=jl+1
+		End If
+	Next
+	
+	
+	
+	lst1.Clear
+	
+	For i=0 To ileLiniWygrywa -1
+	Dim ff As payLine
+		ff = liniaPay(i)
+		lst1.Add(ff)	
+	Next
+	
+	
+	
+	Return lst1
+End Sub
