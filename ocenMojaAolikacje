@@ -1,0 +1,70 @@
+'Code module
+'Subs in this code module will be accessible from all modules.
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+	Dim boo_nieOceniaj As Boolean
+	Dim boo_dalemGwiazke As Boolean
+	Dim dajGwiazdke As Int
+	Dim licznikOcenApp As Int
+	Dim timerOcenApp As Timer
+End Sub
+
+
+
+'********************************************************************************
+'************** OCEN APLIKACJE **************************************************
+'********************************************************************************
+
+Sub ocenMojaApp
+	
+	
+	
+	If boo_dalemGwiazke = False And boo_nieOceniaj = False Then
+
+		dajGwiazdke = dajGwiazdke + 1
+		
+		If dajGwiazdke > 10 Then
+			Dim bmpGwiazdki As Bitmap
+			bmpGwiazdki.Initialize(File.DirAssets,"rateGwiazdki.png")
+			Dim odp As Int
+			odp = Msgbox2(tlumacz.txt_OcenAppProsze,"!",tlumacz.txt_Ocen_Pozniej,tlumacz.txt_Ocen_Nie,tlumacz.txt_Ocen_Tak,bmpGwiazdki)
+				Select odp
+					
+					Case DialogResponse.NEGATIVE 'tak
+						Dim market As Intent, uri As String
+						uri="market://details?id=mayyrob.slotmachine1"
+						market.Initialize( market.ACTION_VIEW,uri )
+						StartActivity( market )
+						boo_nieOceniaj = True
+					Case DialogResponse.CANCEL 'nie
+
+						dajGwiazdke = 0
+						boo_nieOceniaj = True
+							#If traker
+								Main.tracker.SendScreenView("SlotM01_nieOceniam") 
+							#End if
+					Case DialogResponse.POSITIVE 'pozniej
+						dajGwiazdke = 0
+				End Select
+			
+			
+		End If
+		boo_dalemGwiazke = False
+	End If
+Log("boo_dalemGwiazke = " & boo_dalemGwiazke)
+Log("dajGwiazke = " & dajGwiazdke)
+Log("boo_nieOceniaj = " & boo_nieOceniaj)
+	
+	
+End Sub
+
+Sub btn_rateApp_Click
+	
+	boo_nieOceniaj = False
+End Sub
+
+
+'**************************
+'**************************
+'**************************
