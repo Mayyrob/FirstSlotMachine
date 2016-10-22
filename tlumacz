@@ -1,0 +1,120 @@
+'Code module
+'Subs in this code module will be accessible from all modules.
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.	
+
+ 	Dim txt_znakWaluty As String
+	Dim txt_dodano As String
+	Dim txt_dzieki As String
+	Dim txt_TAK, txt_NIE As String
+	Dim txt_ZATWIERZ As String
+	Dim txt_USUN As String
+	Dim txt_EDYCJA As String
+	Dim txt_DODAJ As String
+	Dim txt_ZAPISZ As String
+	Dim txt_RESET As String
+	Dim txt_BRAK_KASY As String
+	
+	
+	Dim txt_longClick_to_reset As String
+	
+	Dim txt_COFNIJ As String
+	Dim txt_Otrzymales As String
+	Dim txt_nextLevel As String
+	
+	Dim txt_POWROT As String
+	Dim txt_AdsOFF As String
+	
+	
+	Dim txt_OcenAppProsze As String
+	Dim txt_Ocen_Tak As String
+	Dim txt_Ocen_Nie As String
+	Dim txt_Ocen_Pozniej As String
+
+	
+End Sub
+
+
+
+
+
+'sprawdzenie jezyka telefonu
+Sub GetDefaultLanguage As String 
+   Dim r As Reflector
+   r.Target = r.RunStaticMethod("java.util.Locale", "getDefault", Null, Null)
+   Return r.RunMethod("getDisplayName")
+End Sub
+
+Sub wybor_jezyka_programu
+	Log(GetDefaultLanguage)
+	If GetDefaultLanguage.Contains("polski") Then
+			Log("wybrano jezyk polski")
+			
+			txt_dodano="dodano "
+			txt_dzieki="Dziękuje "
+			txt_nextLevel="Następny poziom "
+			txt_BRAK_KASY="Brak monet"
+			txt_Otrzymales=" otrzymujesz "
+			txt_znakWaluty="$"
+			txt_TAK = "Tak"
+			txt_ZATWIERZ = "Zatwierdż"
+			txt_NIE = "Nie"
+			txt_USUN = "Usuń"
+			txt_EDYCJA = "Edycja"
+			txt_DODAJ = "Dodaj"
+			txt_ZAPISZ = "Zapisz"
+			txt_COFNIJ = "Cofnij"
+			txt_RESET = "Reset"
+			txt_POWROT = "Powrót"
+			txt_AdsOFF = "Wyłącz Reklamy"
+		
+			txt_longClick_to_reset = "Przytrzymaj aby zresetować do ustawień domyślnych"
+			
+			txt_OcenAppProsze = "Proszę ocen tą aplikacje"
+			txt_Ocen_Tak = "Tak"
+			txt_Ocen_Nie = "Nie"
+			txt_Ocen_Pozniej = "Później"
+			
+	
+	
+	
+'	Else If GetDefaultLanguage.Contains("čeština") Then  'czeski
+'	Else If GetDefaultLanguage.Contains("español") Then  'español
+'	Else If GetDefaultLanguage.Contains("english") Then
+
+	Else	'english
+		Log("wybrano jezyk angielski")
+		txt_dodano="added "
+			txt_dzieki="Thank You "
+			txt_znakWaluty="$"
+			txt_nextLevel="Next level "
+			txt_Otrzymales=" received "
+			txt_BRAK_KASY="No money"
+			txt_TAK = "Yes"
+			txt_ZATWIERZ = "Yes"
+			txt_NIE = "No"
+			txt_USUN = "Delete"
+			txt_EDYCJA = "Edit"
+			txt_DODAJ = "Add"
+			txt_ZAPISZ = "Save"
+			txt_COFNIJ = "Back"
+			txt_RESET = "Reset"
+			txt_POWROT = "Return"
+			txt_AdsOFF = "Disable Ads"
+			
+			txt_longClick_to_reset = "Long press to restore default"
+			
+			txt_OcenAppProsze = "Please ratings that applications"
+			txt_Ocen_Tak = "Yes"
+			txt_Ocen_Nie = "No"
+			txt_Ocen_Pozniej = "Later"
+			
+	End If							
+	
+End Sub
+
+
+
+
+
